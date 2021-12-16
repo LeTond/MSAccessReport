@@ -131,7 +131,7 @@ class AccessBack:
                        'Орг рот полости', 'Мягк. Ткани голени', ]
         list_fetus = ['Плод']
         list_placenta = ['Плацента']
-        list_other = ['Плод', 'Плацента', 'Гипофиз, ХСО', 'Орбиты']
+        list_other = ['Гипофиз, ХСО', 'Орбиты']
 
         diction['Всего'].update({'Всего МРТ': self.perinatal_mri[self.from_data_cond & self.to_data_cond].shape[0]})
         diction['C контрастом'].update({'Всего МРТ': self.perinatal_mri[
