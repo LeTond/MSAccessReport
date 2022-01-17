@@ -2,8 +2,8 @@ from datetime import date
 from access import AccessBack
 from report import Report
 
-from PyQt5.QtWidgets import QApplication, QFileDialog
-from PyQt5 import QtWidgets, uic
+from PyQt6.QtWidgets import QApplication, QFileDialog
+from PyQt6 import QtWidgets, uic
 import sys
 
 
@@ -19,9 +19,8 @@ class Main(QtWidgets.QMainWindow, QtWidgets.QDateEdit):
         self.btn_Quarter.clicked.connect(self.quarter_report)
         self.btn_Year.clicked.connect(self.year_report)
         self.btn_Close_Main.clicked.connect(self.closeEvent)
-        self.filepath = self.get_directory()
 
-    def get_directory(self) -> str:
+    def get_directory(self):
         """
         Pick requiring microsoft access base: file_name.accdb in your directory
         :return: filepath_to_directory_with_file/filename.accdb
@@ -32,7 +31,7 @@ class Main(QtWidgets.QMainWindow, QtWidgets.QDateEdit):
                                                          "Text Files(*.accdb);;\
                                                          ;;All Files(*)")
         self.set_current_date()
-        return filepath
+        self.filepath = filepath
 
     def set_current_date(self):
         self.dateFrom.setDate(date.today())

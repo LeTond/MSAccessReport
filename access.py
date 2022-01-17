@@ -4,9 +4,9 @@ import pandas_access as mdb
 class AccessBack:
     def __init__(self, filepath: str, first_data: str, last_data: str):
         self.counter = 0
-        self.perinatal_mri = mdb.read_table(filepath, "Журнал")
-        self.categories_mri = mdb.read_table(filepath, "Категории")
-        self.departments_mri = mdb.read_table(filepath, "Отделения")
+        self.perinatal_mri = mdb.read_table(filepath, encoding='utf-8', table_name="Журнал")
+        self.categories_mri = mdb.read_table(filepath, encoding='utf-8', table_name="Категории")
+        self.departments_mri = mdb.read_table(filepath, encoding='utf-8',  table_name="Отделения")
 
         self.from_data_cond = self.perinatal_mri['Дата исследования'] > first_data  # day/month/year
         self.to_data_cond = self.perinatal_mri['Дата исследования'] < last_data  # day/month/year
@@ -22,6 +22,9 @@ class AccessBack:
         self.all_categories_list = ['Пл', 'ВМП', 'КА', 'Дог', 'Сотр', 'Суб', 'ДМС', 'Грант', 'Наука', 'ОМС']
         self.not_department_list = ['Пл', 'Дог', 'Сотр', 'Суб', 'ДМС', 'Грант', 'Наука', 'Всего']
         self.department_list = ['ОМС', 'ВМП', 'КА']
+
+    def print(self):
+        print(self.perinatal_mri)
 
     def exist_departments(self) -> list:
         """
