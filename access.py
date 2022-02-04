@@ -82,10 +82,10 @@ class AccessBack:
                 self.perinatal_mri[
                     self.from_data_cond & self.to_data_cond & self.cat_cond(cat) & self.contrast_cond
                     ].shape[0]
-            study = non_contrast_study + contrast_study
+            # study = non_contrast_study + contrast_study
             diction['C контрастом'].update({f"{cat}": contrast_study})
             diction['Без контраста'].update({f"{cat}": non_contrast_study})
-            diction['Всего'].update({f"{cat}": study})
+            diction['Всего'].update({f"{cat}": non_contrast_study})
 
         diction['Без контраста'].update({'Всего': self.perinatal_mri[self.from_data_cond & self.to_data_cond].shape[0]})
         diction['C контрастом'].update(
