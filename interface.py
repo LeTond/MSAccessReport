@@ -2,9 +2,11 @@ from datetime import date
 from access import AccessBack
 from report import Report
 
-from PyQt6.QtWidgets import QApplication, QFileDialog
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
 from PyQt6 import QtWidgets, uic
+from PyQt6.QtCore import QCoreApplication
 import sys
+
 
 
 class Main(QtWidgets.QMainWindow, QtWidgets.QDateEdit):
@@ -12,13 +14,15 @@ class Main(QtWidgets.QMainWindow, QtWidgets.QDateEdit):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         uic.loadUi("gui/StatisticGUI.ui", self)
-
+        
+    # def __clicker_observer(self):
         self.ChooseAccess.clicked.connect(self.get_directory)
         self.btn_Week.clicked.connect(self.week_report)
         self.btn_Month.clicked.connect(self.month_report)
         self.btn_Quarter.clicked.connect(self.quarter_report)
         self.btn_Year.clicked.connect(self.year_report)
-        self.btn_Close_Main.clicked.connect(self.closeEvent)
+        self.btn_Close_Main.clicked.connect(self.closeWindow)
+        self.flag_close = True
 
     def get_directory(self):
         """
@@ -97,21 +101,27 @@ class Main(QtWidgets.QMainWindow, QtWidgets.QDateEdit):
         dict_ = access.year_report()
         rp.generate_year_document(dict_, date_period)
 
+
+    def closeWindow(self):
+        result = QMessageBox.question(self,
+                            "Подтверждение закрытия окна",
+                            "Вы действительно хотите закрыть окно?",
+                            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                            QMessageBox.StandardButton.No)
+
+        if result == QMessageBox.StandardButton.Yes:
+            self.flag_close = False
+            self.close()
+
     def closeEvent(self, event):
-        result = QtWidgets.QMessageBox.question(self,
-                                                "Подтверждение закрытия окна",
-                                                "Вы действительно хотите закрыть окно?",
-                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                                QtWidgets.QMessageBox.No)
-        if result == QtWidgets.QMessageBox.Yes:
-            app.quit()
-        else:
-            pass
+        if self.flag_close:
+            print("Выполняю дейcтвие в методе closeEvent() ...")
+        event.accept()
+
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mn = Main()
     mn.show()
-
     sys.exit(app.exec())

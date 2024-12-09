@@ -20,7 +20,7 @@ class AccessBack:
         self.free_pay_cond = self.perinatal_mri["Категория (ИФ)"] != "Пл"  # в годовом отчете
 
         self.all_categories_list = ['Пл', 'ВМП', 'КА', 'Дог', 'Сотр', 'Суб', 'ДМС', 'Грант', 'Наука', 'ОМС']
-        self.not_department_list = ['Пл', 'Дог', 'Сотр', 'Суб', 'ДМС', 'Грант', 'Наука', 'Всего']
+        self.not_department_list = ['Пл', 'Дог', 'Сотр', 'Суб', 'ДМС', 'Грант', 'Наука', 'Всего', 'Контраст', 'Без КУ']
         self.department_list = ['ОМС', 'ВМП', 'КА']
 
     def print(self):
@@ -335,6 +335,19 @@ class AccessBack:
                 studies = self.perinatal_mri[
                     self.from_data_cond & self.to_data_cond & study_cond].shape[0]
                 diction["Всего"].update({f'{study}': studies})
+
+            elif cat == "Контраст":
+                contrast_studies = self.perinatal_mri[
+                    self.from_data_cond & self.to_data_cond & study_cond & self.contrast_cond].shape[0]
+                diction["Контраст"].update({f'{study}': contrast_studies})
+
+            elif cat == "Без КУ":
+                studies = self.perinatal_mri[
+                    self.from_data_cond & self.to_data_cond & study_cond].shape[0]
+                contrast_studies = self.perinatal_mri[
+                    self.from_data_cond & self.to_data_cond & study_cond & self.contrast_cond].shape[0]
+                diction["Без КУ"].update({f'{study}': studies-contrast_studies})
+
             else:
                 studies = self.perinatal_mri[
                     self.from_data_cond & self.to_data_cond & study_cond & self.cat_cond(cat)].shape[0]
@@ -363,4 +376,10 @@ class AccessBack:
             self.from_data_cond & self.to_data_cond & self.contrast_cond & self.dep_cond(dep)
             & self.free_pay_cond & self.cat_cond(cat)].shape[0]
         diction[f"{dep}\n{cat}"].update({"Контраст": contrast_study})
+
+        all_studies_in_dp = self.perinatal_mri[
+            self.from_data_cond & self.to_data_cond & self.dep_cond(dep)
+            & self.free_pay_cond & self.cat_cond(cat)].shape[0]
+        diction[f"{dep}\n{cat}"].update({f"Всего": all_studies_in_dp})
+
         return diction
